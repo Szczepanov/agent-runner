@@ -21,6 +21,8 @@ def build_context(mode: str) -> ContextPayload:
 
     root = Path.cwd()
     # Deterministic: just list top-level files/dirs as a minimal placeholder
-    entries = sorted([p.name for p in root.iterdir() if p.name not in {".venv", ".git", ".agent-runner"}])
+    entries = sorted(
+        [p.name for p in root.iterdir() if p.name not in {".venv", ".git", ".agent-runner"}]
+    )
     text = "Repository root entries:\n" + "\n".join(f"- {e}" for e in entries)
     return ContextPayload(mode=mode, text=text)

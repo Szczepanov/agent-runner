@@ -7,6 +7,7 @@ import yaml
 
 from agent_runner.personas.models import Persona
 
+
 def _agent_runner_repo_personas_dir() -> Path | None:
     """
     Dev-friendly fallback: if running from a src/ layout,
@@ -18,6 +19,7 @@ def _agent_runner_repo_personas_dir() -> Path | None:
     repo_root = here.parents[3]
     p = repo_root / "personas"
     return p if p.exists() else None
+
 
 def _env(name: str, default: str = "") -> str:
     v = os.environ.get(name)
@@ -46,6 +48,7 @@ def _try_load_from_package(name: str) -> Persona | None:
     """
     try:
         from importlib import resources
+
         pkg = resources.files("agent_runner").joinpath("builtin_personas")
         path = pkg.joinpath(f"{name}.yaml")
         # `path` is a Traversable; read_text works for both source and wheels.

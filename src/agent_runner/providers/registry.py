@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from agent_runner.providers.base import AgentProvider
-from agent_runner.providers.stub import StubProvider
 from agent_runner.providers.jules import JulesProvider
+from agent_runner.providers.stub import StubProvider
 
 
 def get_provider(name: str) -> AgentProvider:

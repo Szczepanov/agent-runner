@@ -16,7 +16,7 @@ from agent_runner.providers.registry import get_provider
 
 def _make_run_id() -> str:
     # timestamp + short random suffix (PID + millis)
-    return f"{time.strftime('%Y%m%d-%H%M%S')}-{os.getpid()}-{int(time.time()*1000)%100000}"
+    return f"{time.strftime('%Y%m%d-%H%M%S')}-{os.getpid()}-{int(time.time() * 1000) % 100000}"
 
 
 def _format_preflight_issues(issues_by_persona: dict[str, list[PreflightIssue]]) -> str:
@@ -150,9 +150,13 @@ def run_personas(
             results.append(_run_one_persona(run_dir, p, context_mode))
     else:
         with concurrent.futures.ThreadPoolExecutor(max_workers=parallelism) as ex:
-            futs = [ex.submit(_run_one_persona, run_dir, p, context_mode) for p in approved_personas]
+            futs = [
+                ex.submit(_run_one_persona, run_dir, p, context_mode) for p in approved_personas
+            ]
             for f in concurrent.futures.as_completed(futs):
                 results.append(f.result())
 
     # NOTE: GitHub sink intentionally stubbed in skeleton.
-    return RunResult(run_id=run_id, results=sorted(results, key=lambda r: r.persona), run_dir=run_dir)
+    return RunResult(
+        run_id=run_id, results=sorted(results, key=lambda r: r.persona), run_dir=run_dir
+    )

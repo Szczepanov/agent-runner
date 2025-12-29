@@ -21,7 +21,7 @@ Jules is treated as an **execution backend**, never as an authority.
 
 ### `JULES_API_KEY` ✅ (required)
 
-**Description**  
+**Description**
 Your Jules API key, used to authenticate all REST API calls.
 
 **How to obtain**
@@ -41,7 +41,7 @@ export JULES_API_KEY="AIzaSy..."
 
 ### `JULES_SOURCE` ✅ (required)
 
-**Description**  
+**Description**
 Identifier of the GitHub repository *source* connected in Jules.
 
 **Format**
@@ -70,17 +70,17 @@ Unlike most tools, **Agent-Runner does NOT require you to always set a branch ex
 ### How the starting branch is resolved (in order)
 
 1. **CLI flag** `--starting-branch`
-2. **Persona override**  
+2. **Persona override**
    ```yaml
    provider_settings:
      jules:
        starting_branch: "main"
    ```
 3. **Environment variable** `JULES_STARTING_BRANCH`
-4. **Auto-detection (default)**  
+4. **Auto-detection (default)**
    - If inside a git repo → current branch
    - If detached HEAD → default remote branch (e.g. `origin/main`)
-5. **Config fallback**  
+5. **Config fallback**
    ```toml
    [jules]
    default_starting_branch = "main"
@@ -92,7 +92,7 @@ If all methods fail, Agent-Runner exits with a clear error and instructions.
 
 ### `JULES_STARTING_BRANCH` (optional)
 
-**Description**  
+**Description**
 Explicitly sets the Git branch Jules should start from.
 
 **Example**
@@ -234,7 +234,7 @@ uv run agent-runner run \
   - Reviewable
   - Optional to apply
 
-> Jules suggests.  
+> Jules suggests.
 > Humans decide.
 
 ---

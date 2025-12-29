@@ -307,4 +307,3 @@ agent-runner run \
 ## 18. License
 
 The project is licensed under the **MIT License** to maximize adoption and minimize legal friction.
-

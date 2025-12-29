@@ -73,7 +73,9 @@ def _auth_headers(api_key: str) -> dict[str, str]:
     }
 
 
-def _http_json(method: str, url: str, headers: dict[str, str], body: dict[str, Any] | None = None) -> Any:
+def _http_json(
+    method: str, url: str, headers: dict[str, str], body: dict[str, Any] | None = None
+) -> Any:
     data = None
     if body is not None:
         data = json.dumps(body).encode("utf-8")
@@ -106,7 +108,12 @@ def _poll_session(settings: JulesSettings, session_name: str) -> dict[str, Any]:
 
         # Plan approval flow (optional)
         if settings.require_plan_approval and state == "AWAITING_PLAN_APPROVAL":
-            _http_json("POST", f"{settings.base_url}/{session_name}:approvePlan", headers=headers, body={})
+            _http_json(
+                "POST",
+                f"{settings.base_url}/{session_name}:approvePlan",
+                headers=headers,
+                body={},
+            )
 
         time.sleep(settings.poll_interval_s)
 
@@ -123,7 +130,11 @@ def _list_all_activities(settings: JulesSettings, session_name: str) -> list[dic
         if page_token:
             qs += f"&pageToken={page_token}"
         resp = (
-            _http_json("GET", f"{settings.base_url}/{session_name}/activities{qs}", headers=headers)
+            _http_json(
+                "GET",
+                f"{settings.base_url}/{session_name}/activities{qs}",
+                headers=headers,
+            )
             or {}
         )
         out.extend(resp.get("activities") or [])
@@ -140,8 +151,8 @@ def _render_markdown(session: dict[str, Any], activities: list[dict[str, Any]]) 
     lines: list[str] = []
     lines.append("# Jules session result")
     lines.append("")
-    lines.append(f"- **Session:** `{session.get('name','')}`")
-    lines.append(f"- **State:** `{session.get('state','')}`")
+    lines.append(f"- **Session:** `{session.get('name', '')}`")
+    lines.append(f"- **State:** `{session.get('state', '')}`")
     if session.get("url"):
         lines.append(f"- **URL:** {session['url']}")
     lines.append("")
@@ -178,9 +189,9 @@ def _render_markdown(session: dict[str, Any], activities: list[dict[str, Any]]) 
         if a.get("sessionFailed") and (a["sessionFailed"] or {}).get("reason"):
             failures.append(a["sessionFailed"]["reason"])
 
-        for art in (a.get("artifacts") or []):
+        for art in a.get("artifacts") or []:
             cs = (art or {}).get("changeSet") or {}
-            gp = (cs.get("gitPatch") or {})
+            gp = cs.get("gitPatch") or {}
             unidiff = gp.get("unidiffPatch")
             if unidiff:
                 patches.append(unidiff)
@@ -357,7 +368,7 @@ class JulesProvider(AgentProvider):
                 PreflightIssue(
                     level="ERROR",
                     message=f"Invalid JULES_SOURCE format: {source!r} (expected sources/{{id}}).",
-                    fix='Set JULES_SOURCE like: sources/123',
+                    fix="Set JULES_SOURCE like: sources/123",
                 )
             )
 
@@ -373,7 +384,10 @@ class JulesProvider(AgentProvider):
             )
 
         # Optional sanity checks (warn only)
-        automation_mode = str(_persona_setting(persona, "automation_mode") or _env("JULES_AUTOMATION_MODE", "AUTOMATION_MODE_UNSPECIFIED")).strip()
+        automation_mode = str(
+            _persona_setting(persona, "automation_mode")
+            or _env("JULES_AUTOMATION_MODE", "AUTOMATION_MODE_UNSPECIFIED")
+        ).strip()
         if automation_mode == "AUTO_CREATE_PR":
             issues.append(
                 PreflightIssue(
@@ -390,7 +404,9 @@ class JulesProvider(AgentProvider):
         if not api_key:
             raise RuntimeError("Missing JULES_API_KEY environment variable.")
 
-        base_url = str(_persona_setting(persona, "base_url") or _env("JULES_BASE_URL", DEFAULT_BASE_URL)).rstrip("/")
+        base_url = str(
+            _persona_setting(persona, "base_url") or _env("JULES_BASE_URL", DEFAULT_BASE_URL)
+        ).rstrip("/")
 
         source = str(_persona_setting(persona, "source") or _env("JULES_SOURCE")).strip()
         if not source:
@@ -411,14 +427,20 @@ class JulesProvider(AgentProvider):
                 "Or run from inside a git repo so auto-detection can succeed."
             )
 
-        require_plan_approval = (
-            str(_persona_setting(persona, "require_plan_approval") or _env("JULES_REQUIRE_PLAN_APPROVAL", "false"))
-            .lower()
-            in {"1", "true", "yes", "y"}
+        require_plan_approval = str(
+            _persona_setting(persona, "require_plan_approval")
+            or _env("JULES_REQUIRE_PLAN_APPROVAL", "false")
+        ).lower() in {"1", "true", "yes", "y"}
+        automation_mode = str(
+            _persona_setting(persona, "automation_mode")
+            or _env("JULES_AUTOMATION_MODE", "AUTOMATION_MODE_UNSPECIFIED")
         )
-        automation_mode = str(_persona_setting(persona, "automation_mode") or _env("JULES_AUTOMATION_MODE", "AUTOMATION_MODE_UNSPECIFIED"))
-        timeout_s = float(_persona_setting(persona, "timeout_s") or _env("JULES_TIMEOUT_S", str(20 * 60)))
-        poll_interval_s = float(_persona_setting(persona, "poll_interval_s") or _env("JULES_POLL_INTERVAL_S", "2"))
+        timeout_s = float(
+            _persona_setting(persona, "timeout_s") or _env("JULES_TIMEOUT_S", str(20 * 60))
+        )
+        poll_interval_s = float(
+            _persona_setting(persona, "poll_interval_s") or _env("JULES_POLL_INTERVAL_S", "2")
+        )
 
         settings = JulesSettings(
             api_key=api_key,
@@ -451,7 +473,15 @@ class JulesProvider(AgentProvider):
             "automationMode": settings.automation_mode,
         }
 
-        created = _http_json("POST", f"{settings.base_url}/sessions", headers=headers, body=session_body) or {}
+        created = (
+            _http_json(
+                "POST",
+                f"{settings.base_url}/sessions",
+                headers=headers,
+                body=session_body,
+            )
+            or {}
+        )
         session_name = created.get("name")  # e.g., sessions/{id}
         if not session_name:
             raise RuntimeError(f"Unexpected create session response: {created}")

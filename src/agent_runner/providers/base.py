@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Iterable
 
 from agent_runner.personas.models import Persona
 
@@ -16,6 +15,7 @@ class PreflightIssue:
     - message: short, actionable message
     - fix: optional, concrete fix instruction
     """
+
     level: str  # "ERROR" | "WARN"
     message: str
     fix: str | None = None

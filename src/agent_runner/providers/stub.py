@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from agent_runner.providers.base import AgentProvider
 from agent_runner.personas.models import Persona
+from agent_runner.providers.base import AgentProvider
 
 
 class StubProvider(AgentProvider):

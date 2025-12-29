@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 import os
-
 from pathlib import Path
-import os
+
 import typer
 from rich.console import Console
 from rich.panel import Panel
@@ -13,6 +12,7 @@ from agent_runner.core.runner import run_personas
 
 app = typer.Typer(add_completion=False, help="Agent-Runner CLI")
 console = Console()
+
 
 def _load_local_env() -> None:
     """
@@ -32,7 +32,9 @@ def _load_local_env() -> None:
         value = value.strip().strip('"').strip("'")
         os.environ.setdefault(key, value)
 
+
 _load_local_env()
+
 
 @app.command()
 def run(
@@ -41,7 +43,9 @@ def run(
         "performance,security,ux", "--personas", help="Comma-separated persona names."
     ),
     context: str = typer.Option(
-        "repo", "--context", help="Context mode: repo|diff|dir (v1: repo only in skeleton)."
+        "repo",
+        "--context",
+        help="Context mode: repo|diff|dir (v1: repo only in skeleton).",
     ),
     pr_number: int = typer.Option(
         0, "--pr-number", help="GitHub PR number for comment sink (optional)."
@@ -97,6 +101,7 @@ def version() -> None:
     from agent_runner import __version__
 
     console.print(__version__)
+
 
 if __name__ == "__main__":
     app()

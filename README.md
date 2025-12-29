@@ -64,7 +64,7 @@ Each run produces deterministic artifacts under:
 ---
 
 ### Task
-A **task** is a semantic label (e.g. `daily-review`) that groups intent, context mode, and personas.  
+A **task** is a semantic label (e.g. `daily-review`) that groups intent, context mode, and personas.
 In v1, tasks are lightweight and passed via CLI.
 
 ---
@@ -217,7 +217,7 @@ MIT License — free to use, modify, and distribute.
 
 ## Philosophy
 
-> AI agents should behave like reliable automation tools —  
+> AI agents should behave like reliable automation tools —
 > **observable, repeatable, and bounded** — not magic chat boxes.
 
 Agent-Runner exists to make that practical.

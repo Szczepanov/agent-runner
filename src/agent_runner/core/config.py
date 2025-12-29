@@ -1,9 +1,8 @@
 from __future__ import annotations
 
+import tomllib
 from dataclasses import dataclass
 from pathlib import Path
-import tomllib
-
 
 DEFAULT_CONFIG_PATHS = [
     Path.cwd() / "agent-runner.toml",
@@ -41,6 +40,7 @@ class PreflightConfig:
     strict  -> any ERROR aborts the whole run before any persona executes
     lenient -> personas with ERROR are skipped; others run
     """
+
     mode: str = "strict"  # "strict" | "lenient"
 
 
