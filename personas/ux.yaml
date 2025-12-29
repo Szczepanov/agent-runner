@@ -4,7 +4,7 @@
 
 name: ux
 display_name: "Designer (UX/UI)"
-provider: "stub"
+provider: "jules"
 enabled: true
 
 inputs:

@@ -4,7 +4,7 @@
 
 name: performance
 display_name: "Bolt (Performance)"
-provider: "stub"   # e.g. jules | openai | local | stub
+provider: "jules"   # e.g. jules | openai | local | stub
 enabled: true
 
 inputs:

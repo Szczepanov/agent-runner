@@ -4,7 +4,7 @@
 
 name: architecture
 display_name: "Architect (Lightweight)"
-provider: "stub"
+provider: "jules"
 enabled: true
 
 inputs:

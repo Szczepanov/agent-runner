@@ -22,3 +22,6 @@ enabled = false
 repo = "owner/repo"
 # PR number can be passed via CLI; you can also set a default here:
 default_pr_number = 0
+
+[preflight]
+mode = "strict"  # strict | lenient

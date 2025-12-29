@@ -36,11 +36,21 @@ class GithubConfig:
 
 
 @dataclass(frozen=True)
+class PreflightConfig:
+    """
+    strict  -> any ERROR aborts the whole run before any persona executes
+    lenient -> personas with ERROR are skipped; others run
+    """
+    mode: str = "strict"  # "strict" | "lenient"
+
+
+@dataclass(frozen=True)
 class AppConfig:
     execution: ExecutionConfig = ExecutionConfig()
     retention: RetentionConfig = RetentionConfig()
     output: OutputConfig = OutputConfig()
     github: GithubConfig = GithubConfig()
+    preflight: PreflightConfig = PreflightConfig()
 
 
 def _pick_config_path() -> Path | None:
@@ -64,6 +74,7 @@ def load_config(path: str | None = None) -> AppConfig:
     ret_ = data.get("retention", {}) or {}
     out_ = data.get("output", {}) or {}
     gh_ = data.get("github", {}) or {}
+    pf_ = data.get("preflight", {}) or {}
 
     return AppConfig(
         execution=ExecutionConfig(parallelism=int(exec_.get("parallelism", 1))),
@@ -79,5 +90,8 @@ def load_config(path: str | None = None) -> AppConfig:
             enabled=bool(gh_.get("enabled", False)),
             repo=str(gh_.get("repo", "")),
             default_pr_number=int(gh_.get("default_pr_number", 0)),
+        ),
+        preflight=PreflightConfig(
+            mode=str(pf_.get("mode", "strict")).strip() or "strict",
         ),
     )

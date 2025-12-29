@@ -4,7 +4,7 @@
 
 name: security
 display_name: "Sentinel (Security)"
-provider: "stub"
+provider: "jules"
 enabled: true
 
 inputs:
