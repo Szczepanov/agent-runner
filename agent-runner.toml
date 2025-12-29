@@ -1,0 +1,24 @@
+# Agent-Runner configuration (TOML)
+
+[execution]
+# Number of personas to run in parallel. Default is 1 (sequential).
+parallelism = 1
+
+[retention]
+# Keep runs forever by default. Enable pruning if desired.
+enabled = false
+days = 30
+
+[output]
+# Always write local artifacts under .agent-runner/
+write_local = true
+# Also print summary to stdout
+print_stdout = true
+
+[github]
+# Optional GitHub PR comment sink.
+enabled = false
+# token is read from env: GITHUB_TOKEN
+repo = "owner/repo"
+# PR number can be passed via CLI; you can also set a default here:
+default_pr_number = 0
