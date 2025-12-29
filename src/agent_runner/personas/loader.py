@@ -7,6 +7,17 @@ import yaml
 
 from agent_runner.personas.models import Persona
 
+def _agent_runner_repo_personas_dir() -> Path | None:
+    """
+    Dev-friendly fallback: if running from a src/ layout,
+    resolve <repo-root>/personas next to src/.
+    """
+    here = Path(__file__).resolve()
+    # .../agent-runner/src/agent_runner/personas/loader.py
+    # parents: 0=personas,1=agent_runner,2=src,3=repo-root
+    repo_root = here.parents[3]
+    p = repo_root / "personas"
+    return p if p.exists() else None
 
 def _env(name: str, default: str = "") -> str:
     v = os.environ.get(name)
@@ -57,14 +68,20 @@ def load_persona(name: str, personas_dir: str | None = None) -> Persona:
       4) Built-in package personas (agent_runner/builtin_personas)
     """
     env_dir = _env("AGENT_RUNNER_PERSONAS_DIR", "").strip()
-    persona = _try_load_from_filesystem(name, personas_dir or (env_dir if env_dir else None))
+    if env_dir:
+        persona = _try_load_from_filesystem(name, env_dir)
+        if persona:
+            return persona
+
+    persona = _try_load_from_filesystem(name, None)
     if persona:
         return persona
 
-    # Fallback to built-ins
-    persona = _try_load_from_package(name)
-    if persona:
-        return persona
+    fallback = _agent_runner_repo_personas_dir()
+    if fallback:
+        persona = _try_load_from_filesystem(name, str(fallback))
+        if persona:
+            return persona
 
     # Final error message with hints
     base = Path(personas_dir) if personas_dir else (Path.cwd() / "personas")
