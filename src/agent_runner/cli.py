@@ -97,3 +97,6 @@ def version() -> None:
     from agent_runner import __version__
 
     console.print(__version__)
+
+if __name__ == "__main__":
+    app()
